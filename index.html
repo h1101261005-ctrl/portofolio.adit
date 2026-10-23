@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="cream">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wilson | Portofolio Pribadi Mahasiswa</title>
+  <meta name="description"
+    content="Website portofolio pribadi mahasiswa teknik informatika & kreator digital. Desain editorial minimalis & brutalist terinspirasi modern web aesthetics.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & CSS VARIABLES
+       ========================================================================== */
+    :root {
+      /* Theme Cream / Editorial (Image 1 Reference) */
+      --bg-primary: #f2f0eb;
+      --bg-secondary: #e8e5dc;
+      --bg-card: rgba(255, 255, 255, 0.65);
+      --text-main: #111111;
+      --text-muted: #5e5d59;
+      --text-dim: #8c8982;
+      --accent-red: #eb2f2f;
+      --border-color: rgba(17, 17, 17, 0.12);
+      --border-strong: rgba(17, 17, 17, 0.85);
+      --badge-bg: #e2ded4;
+      --circle-bg: #111111;
+      --circle-color: #f2f0eb;
+      --shadow-soft: 0 16px 36px rgba(0, 0, 0, 0.05);
+
+      /* Typography */
+      --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-signature: 'Caveat', cursive;
+      --font-sans: 'Space Grotesk', -apple-system, sans-serif;
+
+      --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-snappy: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Dark Mode / Brutalist (Image 2 Reference - Hochburg Style) */
+    [data-theme="dark"] {
+      --bg-primary: #070707;
+      --bg-secondary: #121212;
+      --bg-card: rgba(20, 20, 20, 0.7);
+      --text-main: #ffffff;
+      --text-muted: #8e8e8e;
+      --text-dim: #444444;
+      --accent-red: #ff3b30;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-strong: rgba(255, 255, 255, 0.9);
+      --badge-bg: #1c1c1c;
+      --circle-bg: #ffffff;
+      --circle-color: #070707;
+      --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+      transition: background-color 0.45s ease, color 0.45s ease;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Custom Selection */
+    ::selection {
+      background-color: var(--accent-red);
+      color: #ffffff;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition-snappy);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      outline: none;
+    }
+
+    /* ==========================================================================
+       CUSTOM CURSOR
+       ========================================================================== */
+    .custom-cursor {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      background-color: var(--accent-red);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease-out, width 0.25s ease, height 0.25s ease, background-color 0.25s ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-follower {
+      position: fixed;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--text-muted);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.22s cubic-bezier(0.1, 1, 0.2, 1), border-color 0.3s;
+    }
+
+    .cursor-hover .custom-cursor {
+      width: 38px;
+      height: 38px;
+      background-color: transparent;
+      border: 2px solid var(--accent-red);
+    }
+
+    .cursor-hover .cursor-follower {
+      width: 60px;
+      height: 60px;
+      border-color: var(--accent-red);
+      opacity: 0.6;
+    }
+
+    @media (pointer: coarse) {
+
+      .custom-cursor,
+      .cursor-follower {
+        display: none !important;
+      }
+    }
+
+    /* ==========================================================================
+       TOP CONTROL BAR / FLOATING UTILITIES
+       ========================================================================== */
+    .floating-bar {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 1000;
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 0.5rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .theme-toggle-btn,
+    .sound-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--badge-bg);
+      transition: var(--transition-snappy);
+    }
+
+    .theme-toggle-btn:hover,
+    .sound-toggle-btn:hover {
+      background: var(--text-main);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO (IMAGE 1 REFERENCE)
+       ========================================================================== */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.5rem 3.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    /* Subtle background grid noise texture */
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--border-color) 1px, transparent 0);
+      background-size: 40px 40px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    .hero-date-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      transition: var(--transition-snappy);
+    }
+
+    .hero-date-link:hover {
+      color: var(--text-main);
+      background: var(--badge-bg);
+    }
+
+    .hero-date-link svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.25s ease;
+    }
+
+    .hero-date-link:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* CENTER TITLE: 'portfolio' with signature */
+    .hero-center {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4rem 0;
+      z-index: 2;
+      user-select: none;
+    }
+
+    .monumental-text {
+      font-family: var(--font-heading);
+      font-size: clamp(4.5rem, 18vw, 17.5rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.85;
+      color: var(--text-main);
+      text-transform: lowercase;
+      position: relative;
+      text-align: center;
+      margin: 0;
+    }
+
+    .signature-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-4deg);
+      font-family: var(--font-signature);
+      font-size: clamp(3rem, 11vw, 10.5rem);
+      color: var(--accent-red);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 3;
+      text-shadow: 0 2px 20px rgba(235, 47, 47, 0.25);
+      animation: floatSignature 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatSignature {
+      0% {
+        transform: translate(-50%, -50%) rotate(-4deg);
+      }
+
+      100% {
+        transform: translate(-49%, -52%) rotate(-2.5deg);
+      }
+    }
+
+    /* HERO BOTTOM INFO BAR */
+    .hero-bottom {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-bottom-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .hero-bottom-item span.label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .hero-bottom-item a.value,
+    .hero-bottom-item span.value {
+      color: var(--text-main);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .hero-bottom-item a.value:hover {
+      color: var(--accent-red);
+    }
+
+    /* Scroll Prompt */
+    .scroll-down-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-red);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       SECTION 2: HOCHBURG INTERACTIVE DIRECTORY & NAVIGATION (IMAGE 2 REFERENCE)
+       ========================================================================== */
+    .directory-section {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      position: relative;
+    }
+
+    /* Left Sidebar Profile / Student Bio */
+    .directory-sidebar {
+      padding: 4rem 3.5rem;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .student-badge-wrap {
+      margin-bottom: 2rem;
+    }
+
+    .student-title {
+      font-family: var(--font-heading);
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.25rem;
+    }
+
+    .student-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      line-height: 1.4;
+    }
+
+    .sidebar-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .detail-group h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-group p {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .detail-group a {
+      color: var(--text-main);
+      display: inline-block;
+    }
+
+    .detail-group a:hover {
+      color: var(--accent-red);
+      transform: translateX(3px);
+    }
+
+    .cv-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.5rem;
+      background: var(--text-main);
+      color: var(--bg-primary);
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      width: fit-content;
+      transition: var(--transition-smooth);
+      margin-top: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cv-action-btn:hover {
+      background: var(--accent-red);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(235, 47, 47, 0.25);
+    }
+
+    .sidebar-footer {
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .sidebar-footer a:hover {
+      color: var(--text-main);
+    }
+
+    /* Right Main Menu: Big Interactive Typography List (Hochburg Style) */
+    .directory-content {
+      padding: 4rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .directory-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .directory-item {
+      position: relative;
+    }
+
+    .directory-link {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 7vw, 6.8rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--text-dim);
+      text-transform: lowercase;
+      position: relative;
+      transition: var(--transition-smooth);
+      width: fit-content;
+      padding-right: 6rem;
+    }
+
+    .directory-item.active .directory-link,
+    .directory-link:hover {
+      color: var(--text-main);
+      transform: translateX(12px);
+    }
+
+    /* Circle Arrow Highlight indicator (from Image 2) */
+    .circle-arrow-badge {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) scale(0.6);
+      width: 54px;
+      height: 54px;
+      border: 1.5px solid var(--text-main);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--transition-smooth);
+      background-color: transparent;
+      color: var(--text-main);
+    }
+
+    .directory-item.active .circle-arrow-badge,
+    .directory-link:hover .circle-arrow-badge {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+
+    .circle-arrow-badge svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.25s ease;
+    }
+
+    .directory-link:hover .circle-arrow-badge svg {
+      transform: translateX(4px);
+    }
+
+    .directory-index {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      margin-left: 0.5rem;
+      opacity: 0.7;
+    }
+
+    /* ==========================================================================
+       SECTION 3: PORTFOLIO SHOWCASE & CONTENT PANELS (PROJECTS, ABOUT, EXP)
+       ========================================================================== */
+    .content-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 6rem 3.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+
+    .section-title-wrap h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* PROJECTS GRID */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--text-main);
+    }
+
+    .project-image-box {
+      height: 280px;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* Abstract modern mockups inside project cards */
+    .mockup-canvas {
+      width: 85%;
+      height: 80%;
+      border-radius: 6px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.5s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-card:hover .mockup-canvas {
+      transform: scale(1.04);
+    }
+
+    .mockup-1 {
+      background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+      color: #fff;
+    }
+
+    .mockup-2 {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #38bdf8;
+    }
+
+    .mockup-3 {
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+      color: #f97316;
+    }
+
+    .mockup-4 {
+      background: linear-gradient(135deg, #09090b 0%, #171717 100%);
+      color: #ec4899;
+    }
+
+    .mockup-bar {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mockup-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .mockup-content {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    .project-info {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .project-tag-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .project-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      background: var(--badge-bg);
+      color: var(--text-muted);
+    }
+
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: var(--text-main);
+    }
+
+    .project-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .project-links {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+
+    .project-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .project-link-btn:hover {
+      color: var(--accent-red);
+    }
+
+    /* ==========================================================================
+       SECTION 4: ABOUT & EDUCATION (MAHASISWA PROFILE)
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-bio {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: var(--text-main);
+      font-weight: 400;
+    }
+
+    .about-bio p {
+      margin-bottom: 1.5rem;
+    }
+
+    .about-highlight {
+      color: var(--accent-red);
+      font-weight: 600;
+    }
+
+    .academic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2.2rem;
+    }
+
+    .academic-header {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .university-name {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .major-name {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box .num {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-red);
+      line-height: 1;
+    }
+
+    .stat-box .desc {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .course-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .course-chip {
+      font-size: 0.78rem;
+      padding: 0.3rem 0.65rem;
+      background: var(--badge-bg);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ==========================================================================
+       SECTION 5: EXPERIENCE & ORGANIZATIONS
+       ========================================================================== */
+    .experience-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 220px 1fr 180px;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-snappy);
+    }
+
+    .exp-item:hover {
+      padding-left: 1rem;
+      background: rgba(0, 0, 0, 0.015);
+      border-color: var(--text-main);
+    }
+
+    .exp-period {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .exp-role-wrap h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .exp-company {
+      font-size: 0.92rem;
+      color: var(--accent-red);
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .exp-type-badge {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       SECTION 6: SKILLS & TECH STACK
+       ========================================================================== */
+    .skills-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .skill-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2rem;
+      transition: var(--transition-snappy);
+    }
+
+    .skill-category:hover {
+      border-color: var(--text-main);
+      transform: translateY(-4px);
+    }
+
+    .skill-cat-title {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .skill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .skill-bar-wrap {
+      width: 100px;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-bar {
+      height: 100%;
+      background: var(--text-main);
+      border-radius: 2px;
+    }
+
+    /* ==========================================================================
+       SECTION 7: CONTACT & COLLABORATION
+       ========================================================================== */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .contact-left h3 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-left p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .direct-contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .direct-contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    .direct-contact-item a:hover {
+      color: var(--accent-red);
+      text-decoration: underline;
+    }
+
+    /* Form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: var(--transition-snappy);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--text-main);
+      box-shadow: 0 0 0 2px var(--border-color);
+    }
+
+    .form-submit-btn {
+      padding: 1.1rem 2rem;
+      background: var(--text-main);
+      color: var(--bg-primary);
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: var(--transition-smooth);
+    }
+
+    .form-submit-btn:hover {
+      background: var(--accent-red);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Modal for Quick View / Alerts */
+    .toast-notification {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-main);
+      color: var(--bg-primary);
+      padding: 0.9rem 1.8rem;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-soft);
+      z-index: 99999;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast-notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-left a:hover {
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE DESIGN (TABLETS & PHONES)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .hero-section {
+        padding: 2rem;
+      }
+
+      .hero-bottom {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+      }
+
+      .directory-section {
+        grid-template-columns: 1fr;
+      }
+
+      .directory-sidebar {
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 3rem 2rem;
+      }
+
+      .directory-content {
+        padding: 3rem 2rem;
+      }
+
+      .projects-grid,
+      .about-grid,
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .skills-matrix {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .content-container {
+        padding: 4rem 2rem;
+      }
+
+      .exp-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      .exp-type-badge {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-section {
+        padding: 1.5rem 1rem;
+      }
+
+      .hero-bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .skills-matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .directory-link {
+        font-size: 2.5rem;
+        padding-right: 3.5rem;
+      }
+
+      .circle-arrow-badge {
+        width: 40px;
+        height: 40px;
+      }
+
+      .circle-arrow-badge svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .floating-bar {
+        bottom: 1rem;
+        right: 1rem;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Custom Cursor Elements -->
+  <div class="custom-cursor" id="cursorDot"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- Floating Control Bar -->
+  <div class="floating-bar" aria-label="Quick Settings">
+    <button class="sound-toggle-btn" id="soundToggleBtn" title="Toggle Audio FX">
+      <span id="soundIcon">🔇</span> SFX
+    </button>
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Ganti Mode Tampilan (Cream / Dark)">
+      <span id="themeModeIcon">🌙</span> <span id="themeModeText">Dark Mode</span>
+    </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toastBox">Notifikasi berhasil dikirim!</div>
+
+  <!-- =========================================================================
+       HERO SECTION (REFERENSI GAMBAR 1 - EDITORIAL CREAM / MONUMENTAL TYPE)
+       ========================================================================= -->
+  <section class="hero-section" id="hero">
+    <!-- Top Bar -->
+    <header class="hero-top">
+      <div class="hero-tag">
+        <span class="pulse-dot"></span>
+        <span>Creative Presentation & Portfolio</span>
+      </div>
+      <div class="hero-date-link" id="currentDateBadge" onclick="scrollToSection('directory')">
+        <span id="liveDate">22 Oktober 2026</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Monumental Typography with Signature Overlay -->
+    <div class="hero-center">
+      <h1 class="monumental-text">portfolio</h1>
+      <div class="signature-overlay" id="heroSignature">Wilson Anderson</div>
+    </div>
+
+    <!-- Bottom Meta Details (Exact 4-column layout from Image 1) -->
+    <footer class="hero-bottom">
+      <div class="hero-bottom-item">
+        <span class="label">Social Profile</span>
+        <a href="https://github.com" target="_blank" rel="noopener" class="value">@wilson.student</a>
+      </div>
+      <div class="hero-bottom-item">
+        <span class="label">Website & Domain</span>
+        <a href="#hero" class="value">wilsonportfolio.id</a>
+      </div>
+      <div class="hero-bottom-item">
+        <span class="label">Campus & Location</span>
+        <span class="value">Fakultas Ilmu Komputer, Jakarta</span>
+      </div>
+      <div class="hero-bottom-item">
+        <span class="label">Academic Contact</span>
+        <a href="mailto:wilson.student@univ.ac.id" class="value">wilson.student@univ.ac.id</a>
+      </div>
+    </footer>
+  </section>
+
+  <!-- =========================================================================
+       DIRECTORY & INTERACTIVE NAVIGATION (REFERENSI GAMBAR 2 - HOCHBURG BRUTALIST)
+       ========================================================================= -->
+  <section class="directory-section" id="directory">
+    <!-- Left Column: Student Bio & Info -->
+    <aside class="directory-sidebar">
+      <div class="student-badge-wrap">
+        <h2 class="student-title">wilson.</h2>
+        <p class="student-subtitle">informatics engineering & creative developer</p>
+      </div>
+
+      <div class="sidebar-details">
+        <div class="detail-group">
+          <h4>Profile Singkat</h4>
+          <p>
+            Mahasiswa aktif S1 Teknik Informatika dengan fokus pada Fullstack Web,
+            Desain Interaksi (UI/UX), dan Rekayasa Perangkat Lunak.
+          </p>
+        </div>
+
+        <div class="detail-group">
+          <h4>Kampus & Alamat</h4>
+          <p>
+            Universitas Indonesia<br>
+            Kampus UI Depok, Jawa Barat 16424
+          </p>
+        </div>
+
+        <div class="detail-group">
+          <h4>Kontak & Kolaborasi</h4>
+          <p>
+            <a href="tel:+6281234567890">+62 812-3456-7890</a><br>
+            <a href="mailto:wilson.anderson@student.ac.id">wilson.anderson@student.ac.id</a>
+          </p>
+        </div>
+
+        <div>
+          <button class="cv-action-btn" id="downloadCvBtn">
+            <span>Download Resume / CV</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="#about">academic</a>
+        <a href="#projects">projects</a>
+        <a href="#contact">hire me</a>
+      </div>
+    </aside>
+
+    <!-- Right Column: Massive Typography Navigation Items (From Image 2) -->
+    <main class="directory-content">
+      <ul class="directory-nav-list">
+        <!-- 01 Projects -->
+        <li class="directory-item active" data-target="projects">
+          <a href="#projects" class="directory-link">
+            <span>projects</span>
+            <span class="directory-index">01</span>
+            <div class="circle-arrow-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </li>
+
+        <!-- 02 Experience / Jobs -->
+        <li class="directory-item" data-target="experience">
+          <a href="#experience" class="directory-link">
+            <span>jobs & exp</span>
+            <span class="directory-index">02</span>
+            <div class="circle-arrow-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </li>
+
+        <!-- 03 About Me -->
+        <li class="directory-item" data-target="about">
+          <a href="#about" class="directory-link">
+            <span>about</span>
+            <span class="directory-index">03</span>
+            <div class="circle-arrow-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </li>
+
+        <!-- 04 Tech Stack & Skills -->
+        <li class="directory-item" data-target="skills">
+          <a href="#skills" class="directory-link">
+            <span>skills</span>
+            <span class="directory-index">04</span>
+            <div class="circle-arrow-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </li>
+
+        <!-- 05 Contact -->
+        <li class="directory-item" data-target="contact">
+          <a href="#contact" class="directory-link">
+            <span>contact</span>
+            <span class="directory-index">05</span>
+            <div class="circle-arrow-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: FEATURED PROJECTS (01)
+       ========================================================================= -->
+  <section class="content-container" id="projects">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2>selected works.</h2>
+        <p class="section-subtitle">01 / Kumpulan Proyek Kuliah, Lomba, dan Side-Projects</p>
+      </div>
+      <a href="https://github.com" target="_blank" rel="noopener" class="hero-date-link">
+        Lihat Semua di GitHub
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Project 1 -->
+      <article class="project-card">
+        <div class="project-image-box">
+          <div class="mockup-canvas mockup-1">
+            <div class="mockup-bar">
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+            </div>
+            <div class="mockup-content">
+              &gt; campus_connect --init<br>
+              &gt; Running WebSocket server: 4,200 active students<br>
+              &gt; Status: All nodes synced.
+            </div>
+            <div style="font-size: 0.75rem; opacity: 0.5;">v2.4.0 • PRODUCTION</div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tag-row">
+            <span class="project-tag">Next.js 14</span>
+            <span class="project-tag">TypeScript</span>
+            <span class="project-tag">TailwindCSS</span>
+            <span class="project-tag">Prisma ORM</span>
+          </div>
+          <h3 class="project-title">CampusConnect Hub</h3>
+          <p class="project-desc">
+            Platform portal komunitas mahasiswa terintegrasi untuk diskusi akademik,
+            pertukaran modul tugas, dan pencarian anggota tim lomba/hackathon. Dilengkapi real-time chat & notifikasi.
+          </p>
+          <div class="project-links">
+            <button class="project-link-btn" onclick="showToast('Demo CampusConnect dibuka dalam tab simulasi')">
+              Live Demo &rarr;
+            </button>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">Tugas Akhir /
+              2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project-card">
+        <div class="project-image-box">
+          <div class="mockup-canvas mockup-2">
+            <div class="mockup-bar">
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+            </div>
+            <div class="mockup-content">
+              🧠 Neural Assistant Pipeline<br>
+              PDF Digest: 48 pages scanned<br>
+              Flashcards generated: 35 cards
+            </div>
+            <div style="font-size: 0.75rem; opacity: 0.7;">AI Research Prototype</div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tag-row">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">FastAPI</span>
+            <span class="project-tag">React</span>
+            <span class="project-tag">LangChain</span>
+          </div>
+          <h3 class="project-title">EduSphere AI Assistant</h3>
+          <p class="project-desc">
+            Aplikasi asisten belajar cerdas yang mampu merangkum materi kuliah (PDF & Slide),
+            membuat kuis latihan otomatis, dan simulasi tanya-jawab konsep rumit berbasis RAG (Retrieval-Augmented
+            Generation).
+          </p>
+          <div class="project-links">
+            <button class="project-link-btn" onclick="showToast('Menampilkan model arsitektur EduSphere AI')">
+              Live Demo &rarr;
+            </button>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">Hackathon
+              Winner</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project-card">
+        <div class="project-image-box">
+          <div class="mockup-canvas mockup-3">
+            <div class="mockup-bar">
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+            </div>
+            <div class="mockup-content">
+              🍜 UMKM Kantin Digital<br>
+              Order #9482: 2x Nasi Goreng<br>
+              Payment: QRIS Instant Settled
+            </div>
+            <div style="font-size: 0.75rem; opacity: 0.7;">Mobile-First Web App</div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tag-row">
+            <span class="project-tag">Vue 3</span>
+            <span class="project-tag">Express.js</span>
+            <span class="project-tag">PostgreSQL</span>
+            <span class="project-tag">Midtrans</span>
+          </div>
+          <h3 class="project-title">KantinKu Digital Ordering</h3>
+          <p class="project-desc">
+            Sistem pemesanan makanan tanpa antre khusus kantin kampus, dilengkapi integrasi pembayaran QRIS real-time
+            dan dashboard inventaris stok harian bagi pedagang kantin mahasiswa.
+          </p>
+          <div class="project-links">
+            <button class="project-link-btn" onclick="showToast('Membuka mockup sistem KantinKu')">
+              Live Demo &rarr;
+            </button>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">Kewirausahaan
+              Mahasiswa</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project-card">
+        <div class="project-image-box">
+          <div class="mockup-canvas mockup-4">
+            <div class="mockup-bar">
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+              <span class="mockup-dot"></span>
+            </div>
+            <div class="mockup-content">
+              🎨 Design System v3.0<br>
+              Components: 84 tokens<br>
+              Accessibility: AAA Compliant
+            </div>
+            <div style="font-size: 0.75rem; opacity: 0.7;">Figma & Web Components</div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tag-row">
+            <span class="project-tag">UI/UX Design</span>
+            <span class="project-tag">Figma</span>
+            <span class="project-tag">Storybook</span>
+            <span class="project-tag">CSS Architecture</span>
+          </div>
+          <h3 class="project-title">SIAKAD Redesign & Design System</h3>
+          <p class="project-desc">
+            Eksplorasi perancangan ulang sistem informasi akademik mahasiswa dengan fokus pada kemudahan pengisian KRS,
+            pantauan grafik IPK per semester, dan dark mode ramah mata saat belajar malam hari.
+          </p>
+          <div class="project-links">
+            <button class="project-link-btn" onclick="showToast('Membuka prototipe interaktif Figma')">
+              Case Study &rarr;
+            </button>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">UI/UX Lab
+              Project</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: ABOUT ME & ACADEMIC BACKGROUND (03)
+       ========================================================================= -->
+  <section class="content-container" id="about" style="border-top: 1px solid var(--border-color);">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2>about & study.</h2>
+        <p class="section-subtitle">03 / Latar Belakang Akademik</p>
+      </div>
+      <span class="hero-date-link" style="cursor: default;">
+        Undergraduate Student
+      </span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-bio">
+        <p>
+          Halo! Saya <span class="about-highlight">Wilson Norick</span>, mahasiswa tingkat akhir di program studi
+          Teknik Informatika. Saya memadukan logika rekayasa perangkat lunak dengan ketajaman estetika visual.
+        </p>
+        <p>
+          Bagi saya, kode bukan sekadar deretan instruksi komputasi, melainkan media untuk membangun solusi yang
+          intuitif,
+          bermakna, dan berdampak nyata bagi penggunanya.
+        </p>
+        <p>
+          Saat ini saya aktif mengeksplorasi pengembangan web modern, arsitektur microservices, serta aplikasi
+          kecerdasan buatan terapan. Selalu terbuka untuk peluang magang, riset kolaboratif, maupun freelance
+          engineering.
+        </p>
+      </div>
+
+      <div class="academic-card">
+        <div class="academic-header">
+          <span>Pendidikan Resmi</span>
+          <span>2022 — Sekarang</span>
+        </div>
+        <h3 class="university-name">Universitas Indonesia</h3>
+        <p class="major-name">S1 Teknik Informatika (Fakultas Ilmu Komputer)</p>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="num">3.88</div>
+            <div class="desc">IPK Kumulatif (Skala 4.00)</div>
+          </div>
+          <div class="stat-box">
+            <div class="num">128+</div>
+            <div class="desc">SKS Diselesaikan</div>
+          </div>
+        </div>
+
+        <div>
+          <span
+            style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; display: block; margin-bottom: 0.75rem;">
+            Matakuliah Fokus
+          </span>
+          <div class="course-chips">
+            <span class="course-chip">Struktur Data & Algoritma</span>
+            <span class="course-chip">Pemrograman Web Lanjut</span>
+            <span class="course-chip">Rekayasa Perangkat Lunak</span>
+            <span class="course-chip">Sistem Basis Data</span>
+            <span class="course-chip">Kecerdasan Artifisial</span>
+            <span class="course-chip">Interaksi Manusia & Komputer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: EXPERIENCE & ORGANIZATIONS (02)
+       ========================================================================= -->
+  <section class="content-container" id="experience" style="border-top: 1px solid var(--border-color);">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2>experience & roles.</h2>
+        <p class="section-subtitle">02 / Pengalaman Kerja, Magang & Organisasi Kampus</p>
+      </div>
+      <span class="hero-date-link" style="cursor: default;">
+        3+ Tahun Pengalaman Kampus
+      </span>
+    </div>
+
+    <div class="experience-list">
+      <!-- Exp 1 -->
+      <div class="exp-item">
+        <div class="exp-period">Jun 2025 — Des 2025</div>
+        <div class="exp-role-wrap">
+          <h3>Frontend Engineer Intern</h3>
+          <div class="exp-company">TechNova Digital Solusindo, Jakarta</div>
+          <p class="exp-desc">
+            Mengembangkan komponen antarmuka dasbor analitik bisnis berbasis Next.js dan TailwindCSS.
+            Meningkatkan skor performa Lighthouse dari 72 ke 96 melalui optimasi caching dan lazy loading asset gambar.
+          </p>
+        </div>
+        <div class="exp-type-badge">Magang Industri</div>
+      </div>
+
+      <!-- Exp 2 -->
+      <div class="exp-item">
+        <div class="exp-period">Feb 2025 — Sekarang</div>
+        <div class="exp-role-wrap">
+          <h3>Asisten Dosen (Teaching Assistant)</h3>
+          <div class="exp-company">Laboratorium Komputasi Dasar, Fasilkom</div>
+          <p class="exp-desc">
+            Membimbing 80+ mahasiswa dalam praktikum mata kuliah Struktur Data dan Algoritma (C++ & Python),
+            mengoreksi tugas mingguan, dan memfasilitasi sesi tutorial problem solving.
+          </p>
+        </div>
+        <div class="exp-type-badge">Akademik Kampus</div>
+      </div>
+
+      <!-- Exp 3 -->
+      <div class="exp-item">
+        <div class="exp-period">Jan 2024 — Jan 2025</div>
+        <div class="exp-role-wrap">
+          <h3>Kepala Divisi Teknologi & Informasi</h3>
+          <div class="exp-company">BEM Fakultas Ilmu Komputer</div>
+          <p class="exp-desc">
+            Memimpin tim beranggotakan 6 pengembang dalam merancang dan meluncurkan portal acara tahunan kampus
+            yang dikunjungi lebih dari 15.000 pengunjung unik selama rangkaian festival.
+          </p>
+        </div>
+        <div class="exp-type-badge">Organisasi Mahasiswa</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: SKILLS & TECH STACK (04)
+       ========================================================================= -->
+  <section class="content-container" id="skills" style="border-top: 1px solid var(--border-color);">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2>skills & tools.</h2>
+        <p class="section-subtitle">04 / Keahlian Teknis & Perkakas Pengembangan</p>
+      </div>
+      <span class="hero-date-link" style="cursor: default;">
+        Continual Learning
+      </span>
+    </div>
+
+    <div class="skills-matrix">
+      <!-- Frontend -->
+      <div class="skill-category">
+        <div class="skill-cat-title">
+          <span>01</span>
+          <span>Frontend Engineering</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span>JavaScript (ES6+) / TypeScript</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 90%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>React.js / Next.js</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 88%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>Modern HTML5 & Vanilla CSS</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 95%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>TailwindCSS / CSS Modules</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 92%;"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Backend & Database -->
+      <div class="skill-category">
+        <div class="skill-cat-title">
+          <span>02</span>
+          <span>Backend & Database</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span>Node.js / Express</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 85%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>Python (FastAPI / Flask)</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 80%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>PostgreSQL / MySQL</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 82%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>REST API & GraphQL</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 86%;"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tools & Methodology -->
+      <div class="skill-category">
+        <div class="skill-cat-title">
+          <span>03</span>
+          <span>Design & Tools</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span>Git / GitHub Workflows</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 92%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>Figma (Wireframing & UI)</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 88%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>Docker & Containerization</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 75%;"></div>
+            </div>
+          </li>
+          <li class="skill-item">
+            <span>Agile / Scrum Methodologies</span>
+            <div class="skill-bar-wrap">
+              <div class="skill-bar" style="width: 85%;"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: CONTACT & INQUIRY (05)
+       ========================================================================= -->
+  <section class="content-container" id="contact" style="border-top: 1px solid var(--border-color);">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2>get in touch.</h2>
+        <p class="section-subtitle">05 / Mulai Diskusi, Tawaran Magang, atau Kolaborasi</p>
+      </div>
+      <span class="hero-date-link" style="cursor: default;">
+        Respond time: &lt; 24 jam
+      </span>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-left">
+        <h3>Mari Bangun Karya Bersama.</h3>
+        <p>
+          Tertarik mengajak saya bergabung dalam proyek perangkat lunak, magang industri,
+          atau penelitian akademik? Jangan ragu untuk mengirim pesan!
+        </p>
+
+        <div class="direct-contact-list">
+          <div class="direct-contact-item">
+            <span style="color: var(--accent-red);">✉</span>
+            <a href="mailto:wilson.student@univ.ac.id">wilson.student@univ.ac.id</a>
+          </div>
+          <div class="direct-contact-item">
+            <span style="color: var(--accent-red);">💬</span>
+            <a href="https://wa.me/6281234567890" target="_blank" rel="noopener">+62 812-3456-7890 (WhatsApp)</a>
+          </div>
+          <div class="direct-contact-item">
+            <span style="color: var(--accent-red);">📍</span>
+            <span>Jakarta & Depok, Indonesia</span>
+          </div>
+          <div class="direct-contact-item">
+            <span style="color: var(--accent-red);">💼</span>
+            <a href="https://linkedin.com" target="_blank" rel="noopener">linkedin.com/in/wilson-student</a>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="senderName">Nama Lengkap / Instansi</label>
+          <input type="text" id="senderName" placeholder="Contoh: Budi Santoso / PT Solusi Digital" required>
+        </div>
+
+        <div class="form-group">
+          <label for="senderEmail">Alamat Email</label>
+          <input type="email" id="senderEmail" placeholder="nama@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="senderMessage">Pesan atau Tawaran Proyek</label>
+          <textarea id="senderMessage" rows="5" placeholder="Ceritakan ide kolaborasi atau kebutuhan posisi Anda..."
+            required></textarea>
+        </div>
+
+        <button type="submit" class="form-submit-btn">
+          <span>Kirim Pesan Sekarang</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="footer-left">
+      <a href="#hero">&copy; 2026 Wilson. All rights reserved.</a>
+      <a href="#directory">Directory</a>
+      <a href="#about">Academic</a>
+    </div>
+    <div>
+      Designed with Minimal Editorial & Hochburg Brutalism
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       INTERACTIVE JAVASCRIPT LOGIC
+       ========================================================================= -->
+  <script>
+    // --- 1. THEME SWITCHER (Cream Editorial <-> Hochburg Dark) ---
+    const htmlElement = document.documentElement;
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const themeModeIcon = document.getElementById('themeModeIcon');
+    const themeModeText = document.getElementById('themeModeText');
+
+    function setTheme(theme) {
+      htmlElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        themeModeIcon.textContent = '☀️';
+        themeModeText.textContent = 'Cream Mode';
+      } else {
+        themeModeIcon.textContent = '🌙';
+        themeModeText.textContent = 'Dark Mode';
+      }
+      playClickSound();
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = htmlElement.getAttribute('data-theme');
+      const nextTheme = current === 'dark' ? 'cream' : 'dark';
+      setTheme(nextTheme);
+    });
+
+    // --- 2. AUDIO FEEDBACK (Web Audio API - No external mp3 files needed) ---
+    let soundEnabled = false;
+    let audioCtx = null;
+    const soundBtn = document.getElementById('soundToggleBtn');
+    const soundIcon = document.getElementById('soundIcon');
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playClickSound(freq = 520, duration = 0.04) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Fallback gracefully
+      }
+    }
+
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+      if (soundEnabled) {
+        initAudio();
+        playClickSound(750, 0.08);
+        showToast('Efek suara interaktif diaktifkan');
+      } else {
+        showToast('Efek suara dimatikan');
+      }
+    });
+
+    // --- 3. CUSTOM MAGNETIC CURSOR ---
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorFollower = document.getElementById('cursorFollower');
+
+    let mouseX = -100, mouseY = -100;
+    let followerX = -100, followerY = -100;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+    });
+
+    function renderCursor() {
+      followerX += (mouseX - followerX) * 0.16;
+      followerY += (mouseY - followerY) * 0.16;
+      cursorFollower.style.left = `${followerX}px`;
+      cursorFollower.style.top = `${followerY}px`;
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    // Interactive Hover Elements for Cursor Expansion
+    const hoverTargets = document.querySelectorAll('a, button, .project-card, .directory-link, input, textarea');
+    hoverTargets.forEach((target) => {
+      target.addEventListener('mouseenter', () => {
+        document.body.classList.add('cursor-hover');
+        playClickSound(340, 0.03);
+      });
+      target.addEventListener('mouseleave', () => {
+        document.body.classList.remove('cursor-hover');
+      });
+    });
+
+    // --- 4. TOAST NOTIFICATION ---
+    const toastBox = document.getElementById('toastBox');
+    let toastTimeout = null;
+
+    function showToast(message) {
+      toastBox.textContent = message;
+      toastBox.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastBox.classList.remove('show');
+      }, 3200);
+    }
+
+    // --- 5. SMOOTH SCROLL HELPER ---
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        playClickSound(600, 0.05);
+      }
+    }
+
+    // --- 6. CV DOWNLOAD SIMULATION ---
+    document.getElementById('downloadCvBtn').addEventListener('click', () => {
+      playClickSound(800, 0.06);
+      showToast('Mengunduh CV_Wilson_Informatics.pdf...');
+      // Simulated download
+      setTimeout(() => {
+        showToast('CV Berhasil disiapkan untuk diulas!');
+      }, 1200);
+    });
+
+    // --- 7. CONTACT FORM SUBMISSION ---
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('senderName').value;
+      playClickSound(880, 0.08);
+      showToast(`Terima kasih, ${name}! Pesan Anda telah terkirim.`);
+      document.getElementById('contactForm').reset();
+    }
+
+    // --- 8. LIVE DATE FORMATTER (Matches Image 1 style: "09 May, 2026") ---
+    const liveDateEl = document.getElementById('liveDate');
+    const now = new Date();
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    liveDateEl.textContent = now.toLocaleDateString('en-GB', options);
+
+    // --- 9. INTERACTIVE DIRECTORY HOVER AUDIT ---
+    const directoryItems = document.querySelectorAll('.directory-item');
+    directoryItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        directoryItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        playClickSound(480, 0.04);
+      });
+    });
+  </script>
+</body>
+
+</html>
